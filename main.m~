@@ -1,0 +1,17 @@
+clear
+close all
+clc
+
+
+% trabalho com Julieras controle =)
+
+
+k = 
+i =
+J =
+fi2pontos = 
+r = 
+Mcarro = 
+F= (k*I - J*fi2pontos)/r; 
+l = 
+b = 
