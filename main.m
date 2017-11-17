@@ -13,5 +13,12 @@ Kr = 1.0717; % [N/V]
 g  = 9.81;   % [m/s²]
 
 % trabalho com Julieras controle =)
+zetta = [0 0 0 0]';
+u =[2]; %12 volts bateria de carro degrau
 
-planta = ss(A,B,C,D);
+[sys,y,d_zetta] = linear_func(zetta,u);
+ftG = tf(sys)
+polosG = pole(ftG)
+zerosG = zero(ftG)
+
+sisotool(ftG)
