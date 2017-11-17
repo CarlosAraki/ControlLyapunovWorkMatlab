@@ -13,10 +13,16 @@ Kr = 1.0717; % [N/V]
 g  = 9.81;   % [m/s²]
 
 % trabalho com Julieras controle =)
-syms teta2 m l P teta M J r R b K teta1 x1 x g
+A = [
+    
+];
 
-x2 = (-teta2*m*l^2 - P*l*sin(teta))/m*l*cos(teta) ;
+B = [
+    
+];
 
-f1 = x2*(M +J/r^2) + x1*((b+K^2)/R*r^2) - teta2*(m*l*sin(teta)) + (teta1^2)*(l*sin(teta)^2)/cos(teta) - m*g*tg(teta);
+C = [
+    ];
+D = [];
 
-
+planta = ss(A,B,C,D);
