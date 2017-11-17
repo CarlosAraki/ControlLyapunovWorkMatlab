@@ -20,5 +20,5 @@ s = tf('s');
 ftG = tf(sys);
 polosG = pole(ftG);
 zerosG = zero(ftG);
-
-sisotool(ftG)
+C1 = (s+3)/(s+15);
+sisotool(ftG*C1)
