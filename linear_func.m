@@ -1,4 +1,4 @@
-function [ y, d_zetta] = linear_func( zetta, u )
+function [ sys,y, d_zetta] = linear_func( zetta, u )
 %LINEAR_FUNC Summary of this function goes here
 %   Detailed explanation goes here
     A = [0 1 0 0;
@@ -15,5 +15,7 @@ function [ y, d_zetta] = linear_func( zetta, u )
     d_zetta = A*zetta + B*u;
     
     y = C*zetta + D*u;
+    
+    sys = ss(A,B,C,D);
 end
 

@@ -13,16 +13,5 @@ Kr = 1.0717; % [N/V]
 g  = 9.81;   % [m/s²]
 
 % trabalho com Julieras controle =)
-A = [
-    
-];
-
-B = [
-    
-];
-
-C = [
-    ];
-D = [];
 
 planta = ss(A,B,C,D);
