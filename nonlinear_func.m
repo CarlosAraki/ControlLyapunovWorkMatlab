@@ -11,12 +11,12 @@ function [ y, d_zetta] = nonlinear_func(zetta, u)
     M_aux = MJ + m*sin(zetta(3))^2;
     
     A = [ 0 1 0 0
-          0 -bk/M_aux 0 -(m*l*zetta(4)*sin(zetta(3)))/M_aux
+          0 -bK/M_aux 0 -(m*l*zetta(4)*sin(zetta(3)))/M_aux
           0 0 0 1
-          0 bk*cos(zetta(3))/(M_aux*l) 0 zetta(4)*sin(zetta(3))*cos(zetta(3))/(M_aux)];
+          0 bK*cos(zetta(3))/(M_aux*l) 0 -m*zetta(4)*sin(zetta(3))*cos(zetta(3))/(M_aux)];
       
     F1 = m*g*sin(zetta(3))*cos(zetta(3)) + Kr*u;
-    F2 = -cos(zetta(3))*F1/(l*M_aux);
+    F2 = -cos(zetta(3))*F1/(l*M_aux) - g*sin(zetta(3))/l;
     
     B = [ 0 F1/M_aux 0 F2]';
     
