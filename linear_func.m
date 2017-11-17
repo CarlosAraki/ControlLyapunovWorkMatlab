@@ -9,7 +9,7 @@ function [ sys,y, d_zetta] = linear_func( zetta, u )
     g  = 9.81;   % [m/s²]
     
     A = [0 1 0 0
-        0 bK/MJ m*g/MJ 0
+        0 -bK/MJ m*g/MJ 0
         0 0 0 1
         0 bK/(MJ*l) -((g/l)+(m*g/(MJ*l))) 0];
     
