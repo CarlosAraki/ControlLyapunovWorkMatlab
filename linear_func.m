@@ -1,14 +1,24 @@
 function [ sys,y, d_zetta] = linear_func( zetta, u )
 %LINEAR_FUNC Summary of this function goes here
 %   Detailed explanation goes here
-    A = [0 1 0 0;
-        0 bK m*g/MJ 0;
-        0 0 0 1;
-        0 0 -(g/l)*(1+m/MJ)];
+    MJ = 1.0731; % [kg]
+    m  = 0.209;  % [kg]
+    l  = 0.3302; % [m]
+    bK = 5.4;    % [N.s/(m²)]
+    Kr = 1.0717; % [N/V]
+    g  = 9.81;   % [m/s²]
     
-    B = [0; Kr/MJ; 0; -Kr/l];
+    A = [0 1 0 0
+        0 -bK/MJ m*g/MJ 0
+        0 0 0 1
+        0 bK/(MJ*l) -((g/l)+(m*g/(MJ*l))) 0];
     
-    C = [1; 0; 0; 0];
+    B = [0 
+        Kr/MJ
+        0
+        -Kr/(MJ*l)];
+    
+    C = [1 0 0 0];
     
     D = [0];
     
