@@ -44,7 +44,7 @@ for T=Ts
     Cdt = c2d(C, T, 'tustin');
     [NCT, DCT] = tfdata(Cdt, 'v');
 
-    % Discretização por: ZOH
+    % Discretização por: mapping
     Cdm = c2d(C, T, 'mapping');
     [NCM, DCM] = tfdata(Cdm, 'v');
     
@@ -54,23 +54,24 @@ for T=Ts
     yZ = sysZ.get('yout').get('y').Values.Data;
     tZ = sysZ.get('yout').get('y').Values.Time;
     
-    NCd = NCT;
-    DCd = DCT;
-    sysT = sim('discrete','SimulationMode','normal');
-    yT = sysZ.get('yout').get('y').Values.Data;
-    tT = sysZ.get('yout').get('y').Values.Time;
-    
     NCd = NCM;
     DCd = DCM;
     sysM = sim('discrete','SimulationMode','normal');
     yM = sysM.get('yout').get('y').Values.Data;
     tM = sysM.get('yout').get('y').Values.Time;
     
+    NCd = NCT;
+    DCd = DCT;
+    sysT = sim('discrete','SimulationMode','normal');
+    yT = sysT.get('yout').get('y').Values.Data;
+    tT = sysT.get('yout').get('y').Values.Time;
+    
     figure;
     title(T)
     hold all;
-    stairs(tZ, yZ, 'y');
+    stairs(tZ, yZ, 'b');
     stairs(tT, yT, 'r');
     stairs(tM, yM, 'g');
+    legend('ZOH','TUSTIN','MAPPING')
     hold off
 end

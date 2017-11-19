@@ -54,18 +54,24 @@ for T=Ts
     yZ = sysZ.get('yout').get('y').Values.Data;
     tZ = sysZ.get('yout').get('y').Values.Time;
     
-    NCd = NCT;
-    DCd = DCT;
-    sysT = sim('discrete','SimulationMode','normal');
-    yZ = sysZ.get('yout').get('y').Values.Data;
-    tZ = sysZ.get('yout').get('y').Values.Time;
-    
     NCd = NCM;
     DCd = DCM;
     sysM = sim('discrete','SimulationMode','normal');
-    yZ = sys.get('yout').get('y').Values.Data;
-    tZ = sysM.get('yout').get('y').Values.Time;
+    yM = sysM.get('yout').get('y').Values.Data;
+    tM = sysM.get('yout').get('y').Values.Time;
+    
+    NCd = NCT;
+    DCd = DCT;
+    sysT = sim('discrete','SimulationMode','normal');
+    yT = sysT.get('yout').get('y').Values.Data;
+    tT = sysT.get('yout').get('y').Values.Time;
     
     figure;
-    hold on;
+    title(T)
+    hold all;
+    stairs(tZ, yZ, 'b');
+    stairs(tT, yT, 'r');
+    stairs(tM, yM, 'g');
+    legend('ZOH',)
+    hold off
 end
