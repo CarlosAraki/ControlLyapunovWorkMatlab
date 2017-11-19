@@ -57,19 +57,15 @@ for T=Ts
     NCd = NCT;
     DCd = DCT;
     sysT = sim('discrete','SimulationMode','normal');
-    yT = sysZ.get('yout').get('y').Values.Data;
-    tT = sysZ.get('yout').get('y').Values.Time;
+    yZ = sysZ.get('yout').get('y').Values.Data;
+    tZ = sysZ.get('yout').get('y').Values.Time;
     
     NCd = NCM;
     DCd = DCM;
     sysM = sim('discrete','SimulationMode','normal');
-    yM = sysM.get('yout').get('y').Values.Data;
-    tM = sysM.get('yout').get('y').Values.Time;
+    yZ = sys.get('yout').get('y').Values.Data;
+    tZ = sysM.get('yout').get('y').Values.Time;
     
     figure;
-    title(T)
-    hold all;
-    plot(tZ, yZ, 'blue');
-    plot(tT, yT, 'red');
-    plot(tM, yM, 'green');
+    hold on;
 end
