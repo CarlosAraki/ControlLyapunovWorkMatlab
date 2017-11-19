@@ -69,7 +69,8 @@ for T=Ts
     figure;
     title(T)
     hold all;
-    plot(tZ, yZ, 'blue');
-    plot(tT, yT, 'red');
-    plot(tM, yM, 'green');
+    stairs(tZ, yZ, 'y');
+    stairs(tT, yT, 'r');
+    stairs(tM, yM, 'g');
+    hold off
 end
