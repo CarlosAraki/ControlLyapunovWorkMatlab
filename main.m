@@ -71,7 +71,7 @@ for T=Ts
     hold all;
     stairs(tZ, yZ, 'b');
     stairs(tT, yT, 'r');
-    stairs(tM, yM, 'g');
+    plot(tM, yM, 'g');
     legend('ZOH','TUSTIN','MAPPING')
     hold off
 end
