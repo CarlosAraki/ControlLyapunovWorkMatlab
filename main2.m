@@ -36,7 +36,10 @@ tfG = tfG/s;
 %.1985*u(t) - > .1985 * z/z-1
 T= 1;
 Gdz = c2d(tfG, T, 'zoh');
-sisotool(Gdz)
+%sisotool(Gdz)
+z = tf('z',1);
+w = (z-1)/T;
+CDT = .0531*(1 + w*e+02);
 
 
 
