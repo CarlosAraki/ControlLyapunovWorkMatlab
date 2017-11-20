@@ -21,8 +21,9 @@ u = 0; %12 volts bateria de carro degrau
 s = tf('s');
 [sys,y,d_zetta] = linear_func(zetta,u);
 tfG = tf(sys);
+tfG = tfG/s;
 b = [.9987 0 29.67];
-a = [1 5.032 35.5 149.5];
+a = [1 5.032 35.5 149.5 0 0];
 
 [r,p,k] = residue(b,a)
 
