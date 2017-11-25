@@ -1,3 +1,4 @@
+%% Modelagem Sistema
 clear
 close all
 clc
@@ -21,6 +22,8 @@ tfG = tf(sys);
 polosG = pole(tfG);
 zerosG = zero(tfG);
 
+%% Projeto Controlador Contínuo
+
 % Controlador obsoleto
 % C1 = (s+3)/(s+15);
 
@@ -32,6 +35,8 @@ C = 24*(s+5)/(s+15);
 [NC, DC] = tfdata(C, 'v');
 
 % sisotool(tfG, C)
+
+%% Controlador Discretizado
 
 Ts = [0.2 0.5 1.0];
 
@@ -50,28 +55,66 @@ for T=Ts
     
     NCd = NCZ;
     DCd = DCZ;
-    sysZ = sim('discrete','SimulationMode','normal');
+    sysZ = sim('discrete_linear','SimulationMode','normal');
     yZ = sysZ.get('yout').get('y').Values.Data;
     tZ = sysZ.get('yout').get('y').Values.Time;
     
     NCd = NCM;
     DCd = DCM;
-    sysM = sim('discrete','SimulationMode','normal');
+    sysM = sim('discrete_linear','SimulationMode','normal');
     yM = sysM.get('yout').get('y').Values.Data;
     tM = sysM.get('yout').get('y').Values.Time;
     
     NCd = NCT;
     DCd = DCT;
-    sysT = sim('discrete','SimulationMode','normal');
+    sysT = sim('discrete_linear','SimulationMode','normal');
     yT = sysT.get('yout').get('y').Values.Data;
     tT = sysT.get('yout').get('y').Values.Time;
     
     figure;
     title(T)
     hold all;
-    stairs(tZ, yZ, 'b');
-    stairs(tT, yT, 'r');
+    plot(tZ, yZ, 'b');
+    plot(tT, yT, 'r');
     plot(tM, yM, 'g');
     legend('ZOH','TUSTIN','MAPPING')
     hold off
+    
+    if T==0.2
+        bestControllerInfo = stepinfo(yM,tM);
+    end
 end
+
+discretSettlingTime = bestControllerInfo.SettlingTime; % [s]
+
+%% Controlador Discreto
+
+% Controlador discreto
+z = tf('z',1);
+CD = 9.8468*(z-0.48)/(z-0.3103);
+[NCD, DCD] = tfdata(CD, 'v');
+
+% Controlador discretizado
+T = 0.2;
+Cdm = c2d(C, T, 'mapping');
+[NCM, DCM] = tfdata(Cdm, 'v');
+
+NCd = NCD;
+DCd = DCD;
+sysD = sim('discrete_linear','SimulationMode','normal');
+yD = sysD.get('yout').get('y').Values.Data;
+tD = sysD.get('yout').get('y').Values.Time;
+
+NCd = NCM;
+DCd = DCM;
+sysM = sim('discrete_linear','SimulationMode','normal');
+yM = sysM.get('yout').get('y').Values.Data;
+tM = sysM.get('yout').get('y').Values.Time;
+
+figure;
+title(T)
+hold all;
+plot(tD, yD, 'b');
+plot(tM, yM, 'g');
+legend('Discreto','MAPPING')
+hold off

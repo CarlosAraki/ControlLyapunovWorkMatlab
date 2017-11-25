@@ -35,11 +35,11 @@ tfG = tfG/s;
 %-.04713*u(t) -> Ztrans = -.04713 *z/z-1
 %.1985*u(t) - > .1985 * z/z-1
 T= 1;
-Gdz = c2d(tfG, T, 'zoh');
-%sisotool(Gdz)
+Gdz = c2d(tfG, T, 'ZOH');
+sisotool(Gdz)
 z = tf('z',1);
-w = (z-1)/T;
-CDT = .0531*(1 + w*e+02);
+CD = 15.0848*(z-0.07)/(z+0.9103);
+
 
 
 
