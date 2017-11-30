@@ -195,3 +195,33 @@ stairs(teD, yeD, 'b');
 stairs(teZ, yeZ, 'g');
 legend('Discreto','ZOH');
 hold off
+%% Graficos comparação Discretizado e discreto
+
+ySD = sysD.get('yout').get('state').Values.Data;
+tSD = sysD.get('yout').get('state').Values.Time;
+
+ySZ = sysZ.get('yout').get('state').Values.Data;
+tSZ = sysZ.get('yout').get('state').Values.Time;
+
+figure;
+title('Controlador Discretizado com ZOH');
+subplot(4,1,1);
+plot(tSZ, ySZ(:,1));
+subplot(4,1,2);
+plot(tSZ, ySZ(:,2));
+subplot(4,1,3);
+plot(tSZ, ySZ(:,3));
+subplot(4,1,4);
+plot(tSZ, ySZ(:,4));
+
+figure;
+title('Controlador Projetado Discreto');
+subplot(4,1,1);
+plot(tSD, ySD(:,1));
+subplot(4,1,2);
+plot(tSD, ySD(:,2));
+subplot(4,1,3);
+plot(tSD, ySD(:,3));
+subplot(4,1,4);
+plot(tSD, ySD(:,4));
+

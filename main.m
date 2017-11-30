@@ -3,6 +3,17 @@ clear
 close all
 clc
 
+linear = true;
+
+if linear == true
+    sim_cont = 'linear_sys';
+    sim_disc = 'discrete_linear';
+else
+    sim_cont = 'nonlinear_sys';
+    sim_disc = 'discrete';
+end
+    
+
 % Dados do sistema
 
 MJ = 1.0731; % [kg]
@@ -39,7 +50,7 @@ C = 1.8488*(s+3.5774)/(s+1.9705);
 
 % sisotool(tfG, C)
 
-sysC = sim('linear_sys','SimulationMode','normal');
+sysC = sim(sim_cont,'SimulationMode','normal');
 y = sysC.get('yout').get('y').Values.Data;
 t = sysC.get('yout').get('y').Values.Time;
 ye = sysC.get('yout').get('esf').Values.Data;
@@ -97,7 +108,7 @@ for T=Ts
     
     NCd = NCZ;
     DCd = DCZ;
-    sysZ = sim('discrete_linear','SimulationMode','normal');
+    sysZ = sim(sim_disc,'SimulationMode','normal');
     yZ = sysZ.get('yout').get('y').Values.Data;
     tZ = sysZ.get('yout').get('y').Values.Time;
     yeZ = sysZ.get('yout').get('esf').Values.Data;
@@ -105,7 +116,7 @@ for T=Ts
     
     NCd = NCM;
     DCd = DCM;
-    sysM = sim('discrete_linear','SimulationMode','normal');
+    sysM = sim(sim_disc,'SimulationMode','normal');
     yM = sysM.get('yout').get('y').Values.Data;
     tM = sysM.get('yout').get('y').Values.Time;
     yeM = sysM.get('yout').get('esf').Values.Data;
@@ -113,17 +124,12 @@ for T=Ts
     
     NCd = NCT;
     DCd = DCT;
-    sysT = sim('discrete_linear','SimulationMode','normal');
+    sysT = sim(sim_disc,'SimulationMode','normal');
     yT = sysT.get('yout').get('y').Values.Data;
     tT = sysT.get('yout').get('y').Values.Time;
     yeT = sysT.get('yout').get('esf').Values.Data;
     teT = sysT.get('yout').get('esf').Values.Time;
     
-%     NCd = NCP;
-%     DCd = DCP;
-%     sysP = sim('discrete','SimulationMode','normal');
-%     yP = sysP.get('yout').get('y').Values.Data;
-%     tP = sysP.get('yout').get('y').Values.Time;
     
     figure;
     title(['Deslocamento T = ', num2str(T), ' s']);
@@ -176,7 +182,7 @@ Cdz = c2d(C, T, 'ZOH');
 T=1;
 NCd = NCD;
 DCd = DCD;
-sysD = sim('discrete_linear','SimulationMode','normal');
+sysD = sim(sim_disc,'SimulationMode','normal');
 yD = sysD.get('yout').get('y').Values.Data;
 tD = sysD.get('yout').get('y').Values.Time;
 yeD = sysD.get('yout').get('esf').Values.Data;
@@ -185,7 +191,7 @@ teD = sysD.get('yout').get('esf').Values.Time;
 T = 0.2;
 NCd = NCZ;
 DCd = DCZ;
-sysZ = sim('discrete_linear','SimulationMode','normal');
+sysZ = sim(sim_disc,'SimulationMode','normal');
 yZ = sysZ.get('yout').get('y').Values.Data;
 tZ = sysZ.get('yout').get('y').Values.Time;
 yeZ = sysZ.get('yout').get('esf').Values.Data;
@@ -212,3 +218,34 @@ stairs(teD, yeD, 'b');
 stairs(teZ, yeZ, 'g');
 legend('Discreto','ZOH');
 hold off
+%% Graficos comparação Discretizado e discreto
+
+ySD = sysD.get('yout').get('state').Values.Data;
+tSD = sysD.get('yout').get('state').Values.Time;
+
+ySZ = sysZ.get('yout').get('state').Values.Data;
+tSZ = sysZ.get('yout').get('state').Values.Time;
+
+figure;
+title('Controlador Discretizado com ZOH');
+subplot(4,1,1);
+plot(tSZ, ySZ(:,1));
+title('Posição x [m]')
+subplot(4,1,2);
+plot(tSZ, ySZ(:,2));
+subplot(4,1,3);
+plot(tSZ, ySZ(:,3));
+subplot(4,1,4);
+plot(tSZ, ySZ(:,4));
+
+figure;
+title('Controlador Projetado Discreto');
+subplot(4,1,1);
+plot(tSD, ySD(:,1));
+subplot(4,1,2);
+plot(tSD, ySD(:,2));
+subplot(4,1,3);
+plot(tSD, ySD(:,3));
+subplot(4,1,4);
+plot(tSD, ySD(:,4));
+
