@@ -149,7 +149,6 @@ Gdz = c2d(tfG, T, 'ZOH');
 % Controlador discreto
 z = tf('z',1);
 CD = 2.2652*(z+0.11)/(z-0.01);
-%CD = 2.2652*(z+0.15)/(z-0.2);
 [NCD, DCD] = tfdata(CD, 'v');
 
 % Controlador discretizado
