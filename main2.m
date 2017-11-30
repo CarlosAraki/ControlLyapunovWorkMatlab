@@ -38,7 +38,7 @@ C = 24*(s+5)/(s+15);
 
 %% Controlador Discretizado
 
-Ts = [0.2 0.5 1.0];
+Ts = [0.2 0.5];
 
 for T=Ts
     % Discretização por: ZOH
@@ -72,7 +72,7 @@ for T=Ts
     tT = sysT.get('yout').get('y').Values.Time;
     
     figure;
-    title(T)
+    title('T = ', num2str(T), ' s');
     hold all;
     plot(tZ, yZ, 'b');
     plot(tT, yT, 'r');
