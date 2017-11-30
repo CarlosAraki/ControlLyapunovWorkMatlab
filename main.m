@@ -71,8 +71,19 @@ hold off
 
 Ts = [0.2 0.5 1.0];
 
+z = tf('z',1);
+
+
 for T=Ts
+    %planta discreta
+%     
+%     w = (z-1)/T;
+%     CDP = .0531*(1 + w*100);
+%     [NCP,DCP] = tfdata(CDP,'v');
+%     DCP = 1;
     % Discretização por: ZOH
+    
+    
     Cdz = c2d(C, T, 'zoh');
     [NCZ, DCZ] = tfdata(Cdz, 'v');
 
@@ -107,6 +118,12 @@ for T=Ts
     tT = sysT.get('yout').get('y').Values.Time;
     yeT = sysT.get('yout').get('esf').Values.Data;
     teT = sysT.get('yout').get('esf').Values.Time;
+    
+%     NCd = NCP;
+%     DCd = DCP;
+%     sysP = sim('discrete','SimulationMode','normal');
+%     yP = sysP.get('yout').get('y').Values.Data;
+%     tP = sysP.get('yout').get('y').Values.Time;
     
     figure;
     title(['Deslocamento T = ', num2str(T), ' s']);
