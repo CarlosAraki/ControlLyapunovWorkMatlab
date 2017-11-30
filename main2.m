@@ -1,6 +1,4 @@
-%parte discreta 7/8
-
-
+%% Modelagem Sistema
 clear
 close all
 clc
@@ -21,36 +19,113 @@ u = 0; %12 volts bateria de carro degrau
 s = tf('s');
 [sys,y,d_zetta] = linear_func(zetta,u);
 tfG = tf(sys);
-tfG = tfG/s;
-% b = [.9987 0 29.67];
-% a = [1 5.032 35.5 149.5 0 0];
-% [r,p,k] = residue(b,a)
-% f2 = 0.002935/(  s^2 + 0.5218*s + 33.15);
-% f3 = .04805/(s+4.51);
-% f4 = -.04713/s;
-% f5 = .1985/s;
-%.04805*exp(-4.51*t) -> .04805 * z/z-exp(-4.51)
-%5.1028e-04 *(sin(5.7517*t)*exp(-.2609*t)) ->
-%5.1028e-04*(sin(5.7517)*exp(-.2609)*z)/(z^2  -2*cos(5.7571)*exp(-.2609)*z + exp(-.5212))
-%-.04713*u(t) -> Ztrans = -.04713 *z/z-1
-%.1985*u(t) - > .1985 * z/z-1
+polosG = pole(tfG);
+zerosG = zero(tfG);
+
+%% Projeto Controlador Contínuo
+
+% Controlador obsoleto
+% C1 = (s+3)/(s+15);
+
+% Novo Controlador
+C = 24*(s+5)/(s+15);
+% Tempo de estabilização: 2.08 s
+% Esforço de controle: 24 V
+% Amortecimento: 
+[NC, DC] = tfdata(C, 'v');
+
+% sisotool(tfG, C)
+
+%% Controlador Discretizado
+
+Ts = [0.2 0.5 1.0];
+
+for T=Ts
+    % Discretização por: ZOH
+    Cdz = c2d(C, T, 'zoh');
+    [NCZ, DCZ] = tfdata(Cdz, 'v');
+
+    % Discretização por: Tustin
+    Cdt = c2d(C, T, 'tustin');
+    [NCT, DCT] = tfdata(Cdt, 'v');
+
+    % Discretização por: mapping
+    Cdm = c2d(C, T, 'mapping');
+    [NCM, DCM] = tfdata(Cdm, 'v');
+    
+    NCd = NCZ;
+    DCd = DCZ;
+    sysZ = sim('discrete','SimulationMode','normal');
+    yZ = sysZ.get('yout').get('y').Values.Data;
+    tZ = sysZ.get('yout').get('y').Values.Time;
+    
+    NCd = NCM;
+    DCd = DCM;
+    sysM = sim('discrete','SimulationMode','normal');
+    yM = sysM.get('yout').get('y').Values.Data;
+    tM = sysM.get('yout').get('y').Values.Time;
+    
+    NCd = NCT;
+    DCd = DCT;
+    sysT = sim('discrete','SimulationMode','normal');
+    yT = sysT.get('yout').get('y').Values.Data;
+    tT = sysT.get('yout').get('y').Values.Time;
+    
+    figure;
+    title(T)
+    hold all;
+    plot(tZ, yZ, 'b');
+    plot(tT, yT, 'r');
+    plot(tM, yM, 'g');
+    legend('ZOH','TUSTIN','MAPPING')
+    hold off
+    
+    if T==0.2
+        bestControllerInfo = stepinfo(yM,tM);
+    end
+end
+
+discretSettlingTime = bestControllerInfo.SettlingTime; % [s]
+
+%% Controlador Discreto
+
 T= 1;
 Gdz = c2d(tfG, T, 'ZOH');
-sisotool(Gdz)
+
+% Controlador discreto
 z = tf('z',1);
-CD = 15.0848*(z-0.07)/(z+0.9103);
+CD = 5.4*(z+0.0067)/(z+3.0590e-07);
+[NCD, DCD] = tfdata(CD, 'v');
+
+% Controlador discretizado
+T = 0.2;
+Cdm = c2d(C, T, 'mapping');
+[NCM, DCM] = tfdata(Cdm, 'v');
+
+NCd = NCD;
+DCd = DCD;
+sysD = sim('discrete','SimulationMode','normal');
+yD = sysD.get('yout').get('y').Values.Data;
+tD = sysD.get('yout').get('y').Values.Time;
+
+NCd = NCM;
+DCd = DCM;
+sysM = sim('discrete','SimulationMode','normal');
+yM = sysM.get('yout').get('y').Values.Data;
+tM = sysM.get('yout').get('y').Values.Time;
+
+figure;
+title('Comparação Discreto Vs Discretizado');
+hold all;
+plot(tD, yD, 'b');
+plot(tM, yM, 'g');
+
+errMaior = (1.02)*ones(length(tD),1);
+errMenor = (0.98)*ones(length(tD),1);
+plot(tD, errMaior, 'black --');
+plot(tD, errMenor, 'black --');
+
+legend('Discreto','MAPPING', 'Erro Regime', 'Erro Regime')
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+hold off

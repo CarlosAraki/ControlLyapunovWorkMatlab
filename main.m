@@ -89,9 +89,12 @@ discretSettlingTime = bestControllerInfo.SettlingTime; % [s]
 
 %% Controlador Discreto
 
+T= 1;
+Gdz = c2d(tfG, T, 'ZOH');
+
 % Controlador discreto
 z = tf('z',1);
-CD = 9.8468*(z-0.48)/(z-0.3103);
+CD = 5.4*(z+0.0067)/(z+3.0590e-07);
 [NCD, DCD] = tfdata(CD, 'v');
 
 % Controlador discretizado
@@ -112,9 +115,17 @@ yM = sysM.get('yout').get('y').Values.Data;
 tM = sysM.get('yout').get('y').Values.Time;
 
 figure;
-title(T)
+title('Comparação Discreto Vs Discretizado');
 hold all;
 plot(tD, yD, 'b');
 plot(tM, yM, 'g');
-legend('Discreto','MAPPING')
+
+errMaior = (1.02)*ones(length(tD),1);
+errMenor = (0.98)*ones(length(tD),1);
+plot(tD, errMaior, 'black --');
+plot(tD, errMenor, 'black --');
+
+legend('Discreto','MAPPING', 'Erro Regime', 'Erro Regime')
+
+
 hold off
