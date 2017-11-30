@@ -35,16 +35,8 @@ zerosG = zero(tfG);
 
 %% Projeto Controlador Contínuo
 
-% Controlador obsoleto
-% C1 = (s+3)/(s+15);
-
-% Novo Controlador
-%C = 24*(s+5)/(s+15);
-% Tempo de estabilização: 2.08 s
-% Esforço de controle: 24 V
-% Amortecimento: 
-
-% Agora sim um Controlador correto
+% Controlador projetado com a ajuda do sisotool para as especificações do
+% projeto
 C = 1.8488*(s+3.5774)/(s+1.9705);
 [NC, DC] = tfdata(C, 'v');
 
@@ -77,6 +69,23 @@ plot(te, ye, 'b');
 legend('Controlador', 'Erro Regime', 'Erro Regime')
 hold off
 
+ySC = sysC.get('yout').get('state').Values.Data;
+tSC = sysC.get('yout').get('state').Values.Time;
+
+figure;
+title('Controlador Contínuo');
+subplot(4,1,1);
+plot(tSC, ySC(:,1));
+title('Posição x [m]')
+subplot(4,1,2);
+plot(tSC, ySC(:,2));
+title("Velocidade x' [m/s]")
+subplot(4,1,3);
+plot(tSC, ySC(:,3));
+title('Ângulo \theta [rad]')
+subplot(4,1,4);
+plot(tSC, ySC(:,4));
+title("Velocidade Angular \theta' [rad/s]")
 
 %% Controlador Discretizado
 
@@ -233,19 +242,26 @@ plot(tSZ, ySZ(:,1));
 title('Posição x [m]')
 subplot(4,1,2);
 plot(tSZ, ySZ(:,2));
+title("Velocidade x' [m/s]")
 subplot(4,1,3);
 plot(tSZ, ySZ(:,3));
+title('Ângulo \theta [rad]')
 subplot(4,1,4);
 plot(tSZ, ySZ(:,4));
+title("Velocidade Angular \theta' [rad/s]")
 
 figure;
 title('Controlador Projetado Discreto');
 subplot(4,1,1);
 plot(tSD, ySD(:,1));
+title('Posição x [m]')
 subplot(4,1,2);
 plot(tSD, ySD(:,2));
+title("Velocidade x' [m/s]")
 subplot(4,1,3);
 plot(tSD, ySD(:,3));
+title('Ângulo \theta [rad]')
 subplot(4,1,4);
 plot(tSD, ySD(:,4));
+title("Velocidade Angular \theta' [rad/s]")
 
